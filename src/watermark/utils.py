@@ -1,15 +1,21 @@
 from PIL import Image
 
 
-def expand_to_full_square(image: Image.Image, background_color: tuple):
-    width, height = image.size
-    if width == height:
-        return image
-    elif width > height:
-        result = Image.new(image.mode, (width, width), background_color)
-        result.paste(image, (0, (width - height) // 2))
-        return result
-    else:
-        result = Image.new(image.mode, (height, height), background_color)
-        result.paste(image, ((height - width) // 2, 0))
-        return result
+def expand_watermark_to_square(image: Image.Image, size: int) -> Image.Image:
+    image_width, image_height = image.size
+    full_square_watermark = Image.new(
+        "RGBA",
+        (
+            size,
+            size,
+        ),
+        (255, 255, 255, 0),
+    )
+    full_square_watermark.paste(
+        image,
+        (
+            (size - image_width) // 2,
+            (size - image_height) // 2,
+        ),
+    )
+    return full_square_watermark

@@ -52,19 +52,20 @@ class LogoWatermark(Watermark):
         super().__init__(randomize)
 
     def create_watermark(self):
-        logo_size = int(math.sqrt(self.percentage_size / 100) * 1000)
+        target_logo_size = int(math.sqrt(self.percentage_size / 100) * 1000)
         inv_logo = self.logo.point(lambda p: self.intensity if p < 175 else 0)
-        watermark_logo = Image.new("RGB", self.logo.size, (255, 255, 255))
-        watermark_logo.putalpha(inv_logo)
-        watermark_logo = utils.expand2square(watermark_logo, (255, 255, 255, 0)).resize(
+        watermark = Image.new("RGB", self.logo.size, (255, 255, 255))
+        watermark.putalpha(inv_logo)
+        watermark = utils.expand_watermark_to_square(
+            image=watermark, size=max(self.logo.size)
+        ).resize(
             (
-                logo_size,
-                logo_size,
+                target_logo_size,
+                target_logo_size,
             )
         )
-        watermark = Image.new("RGBA", (1000, 1000), (255, 255, 255, 0))
-        watermark.paste(
-            watermark_logo, (int((1000 - logo_size) / 2), int((1000 - logo_size) / 2))
+        watermark = utils.expand_watermark_to_square(
+            image=watermark, size=config.watermark_settings.WATERMARK_SIZE
         )
 
         return watermark
@@ -86,7 +87,7 @@ class TextWatermark(Watermark):
 
         font_size = 1
         font = ImageFont.truetype(
-            str(config.paths.fonts / "DroidSans.ttf"),
+            str(config.paths.FONTS / "DroidSans.ttf"),
             font_size,
         )
         text_left, text_top, text_right, text_bottom = d.textbbox(
@@ -98,7 +99,7 @@ class TextWatermark(Watermark):
             font_size += 1
 
             font = ImageFont.truetype(
-                str(config.paths.fonts / "DroidSans.ttf"),
+                str(config.paths.FONTS / "DroidSans.ttf"),
                 font_size,
             )
             text_left, text_top, text_right, text_bottom = d.textbbox(
@@ -136,9 +137,7 @@ class RectangleWatermark(Watermark):
         self,
     ) -> Image.Image:
 
-        watermark = Image.new("RGBA", (1000, 1000), (255, 255, 255, 0))
-
-        rectangle = Image.new(
+        watermark = Image.new(
             "RGBA",
             (
                 (100 - self.offset_left_percentage - self.offset_right_percentage) * 10,
@@ -146,9 +145,8 @@ class RectangleWatermark(Watermark):
             ),
             (255, 255, 255, self.intensity),
         )
-        watermark.paste(
-            rectangle,
-            (self.offset_left_percentage * 10, self.offset_top_percentage * 10),
+        watermark = utils.expand_watermark_to_square(
+            image=watermark, size=config.watermark_settings.WATERMARK_SIZE
         )
 
         return watermark

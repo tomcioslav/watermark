@@ -16,7 +16,10 @@ class Paths(BaseSettings):
 paths = Paths()
 
 
-class WatermarkCreationSettings(BaseSettings):
+class WatermarkSettings(BaseSettings):
     WATERMARK_SIZE: int = 1000
     RANDOM_HORIZONTAL_MOVEMENT: int = 300
     RANDOM_VERTICAL_MOVEMENT: int = 300
+
+
+watermark_settings = WatermarkSettings()
