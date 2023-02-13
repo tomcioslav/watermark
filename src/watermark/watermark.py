@@ -6,9 +6,9 @@ from PIL import ImageDraw
 import math
 
 import random
-import config
+import watermark.config as config
 
-import src.watermark.utils as utils
+import watermark.utils as utils
 
 
 class Watermark(ABC):
