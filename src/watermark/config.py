@@ -1,6 +1,7 @@
-from pydantic import BaseSettings
-from pathlib import Path
 import os
+from pathlib import Path
+
+from pydantic import BaseSettings
 
 
 class Paths(BaseSettings):

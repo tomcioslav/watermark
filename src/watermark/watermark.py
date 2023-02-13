@@ -1,14 +1,10 @@
-from PIL import Image
+import math
+import random
 from abc import ABC, abstractmethod
 
-from PIL import ImageFont
-from PIL import ImageDraw
-import math
-
-import random
 import watermark.config as config
-
 import watermark.utils as utils
+from PIL import Image, ImageDraw, ImageFont
 
 
 class Watermark(ABC):
