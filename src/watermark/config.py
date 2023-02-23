@@ -11,6 +11,7 @@ class Paths(BaseSettings):
     EXTERNAL = DATA / "external"
     FONTS = DATA / "fonts"
     LOGOS = DATA / "logos"
+    MODELS = BASE / "models"
 
 
 paths = Paths()
@@ -23,3 +24,13 @@ class WatermarkSettings(BaseSettings):
 
 
 watermark_settings = WatermarkSettings()
+
+
+class TrainingSettings(BaseSettings):
+    SIZE_OF_IMAGE: tuple[int, int] = 200, 200
+    SIZE_OF_BATCH: int = 16
+    NUM_OF_EPOCHS: int = 5
+    DEVICE: str = "gpu"
+
+
+training_settings = TrainingSettings()

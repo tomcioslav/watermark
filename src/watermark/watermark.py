@@ -3,6 +3,7 @@ import random
 from abc import ABC, abstractmethod
 
 import watermark.config as config
+import watermark.schemas as schemas
 import watermark.utils as utils
 from PIL import Image, ImageDraw, ImageFont
 
@@ -32,10 +33,12 @@ class Watermark(ABC):
                 (1, 0, horizontal_shift, 0, 1, vertical_shift),
             )
 
-    def add_to_image(self, image: Image.Image) -> Image.Image:
+    def __call__(self, image: Image.Image) -> Image.Image:
         resized_watermark = self.get_watermark().resize(size=image.size)
-        watermarked_image = Image.alpha_composite(image, resized_watermark)
-        return watermarked_image
+        watermarked_image = Image.alpha_composite(
+            image.convert("RGBA"), resized_watermark
+        )
+        return watermarked_image.convert("RGB")
 
 
 class LogoWatermark(Watermark):
@@ -44,17 +47,22 @@ class LogoWatermark(Watermark):
         logo_path: str,
         percentage_size: int,
         intensity: int,
+        watermark_mode: schemas.LogoWatermarkModes = schemas.LogoWatermarkModes.light,
         randomize: bool = False,
     ):
         self.logo = Image.open(logo_path).convert("L")
         self.percentage_size = percentage_size
         self.intensity = intensity
+        if watermark_mode == schemas.LogoWatermarkModes.light:
+            self.logo_color = (255, 255, 255)
+        elif watermark_mode == schemas.LogoWatermarkModes.dark:
+            self.logo_color = (0, 0, 0)
         super().__init__(randomize)
 
     def create_watermark(self):
         target_logo_size = int(math.sqrt(self.percentage_size / 100) * 1000)
         inv_logo = self.logo.point(lambda p: self.intensity if p < 175 else 0)
-        watermark = Image.new("RGB", self.logo.size, (255, 255, 255))
+        watermark = Image.new("RGB", self.logo.size, self.logo_color)
         watermark.putalpha(inv_logo)
         watermark = utils.expand_watermark_to_square(
             image=watermark, size=max(self.logo.size)
@@ -150,3 +158,8 @@ class RectangleWatermark(Watermark):
         )
 
         return watermark
+
+
+class PlainWatermark(Watermark):
+    def __call__(self, image: Image.Image) -> Image.Image:
+        return image

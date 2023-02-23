@@ -11,17 +11,22 @@ packages = [
 ]
 
 [tool.poetry.dependencies]
-python = "3.10.6"
+python = "^3.10"
 jupyterlab = "^3.0.0"
 pandas = "^1.2.0"
 jupyterlab_git = "^0.23.3"
-jupyterlab_widgets = "^1.0.0"
+jupyterlab_widgets = "3.0.0"
 numpy = "^1.23.2"
-torch = "1.12.1"
-torchvision = "0.13.1"
-openimages = "0.0.1"
 pre-commit = "3.0.4"
 pytorch-lightning = "1.9.1"
+datasets = {extras=["vision"], version= "2.9.0"}
+pydantic = "1.10.4"
+mlflow = "2.1.1"
+torch = "1.13.1"
+torchvision = "0.14.1"
+llvmlite = "0.39.1"
+numba = "0.56.4"
+
 
 [tool.poetry.group.dev.dependencies]
 bandit = "^1.6.2"
@@ -36,7 +41,6 @@ pytest-cov = "^3.0"
 pytest-xdist = "^2.5.0"
 vulture = "^2.3"
 mypy = "^0.982"
-pydantic = "1.10.4"
 
 
 [build-system]
