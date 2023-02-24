@@ -5,8 +5,8 @@ import watermark.config as config
 import watermark.examples as ex
 from pytorch_lightning.loggers import MLFlowLogger
 
-train_dataloader = ex.full_logo_test_dataloader
-test_dataloader = ex.full_logo_train_dataloader
+train_dataloader = ex.full_logo_val_dataloader
+val_dataloader = ex.full_logo_train_dataloader
 
 mlflow_logger = MLFlowLogger(
     experiment_name="lightning_logs", tracking_uri="file:./ml-runs"
@@ -27,5 +27,5 @@ with mlflow.start_run() as run:
     trainer.fit(
         model=watermark_net,
         train_dataloaders=train_dataloader,
-        val_dataloaders=test_dataloader,
+        val_dataloaders=val_dataloader,
     )

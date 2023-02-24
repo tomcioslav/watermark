@@ -44,13 +44,13 @@ class Watermark(ABC):
 class LogoWatermark(Watermark):
     def __init__(
         self,
-        logo_path: str,
+        logo: Image.Image,
         percentage_size: int,
         intensity: int,
         watermark_mode: schemas.LogoWatermarkModes = schemas.LogoWatermarkModes.light,
         randomize: bool = False,
     ):
-        self.logo = Image.open(logo_path).convert("L")
+        self.logo = logo.convert("L")
         self.percentage_size = percentage_size
         self.intensity = intensity
         if watermark_mode == schemas.LogoWatermarkModes.light:
